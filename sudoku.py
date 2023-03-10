@@ -1,8 +1,6 @@
 import random
 import sys
 
-
-
 sep = '\n' +  ('-' * 20) + '\n'
 
 def checkRow(grid, row, col):
@@ -127,48 +125,6 @@ def removeCells(grid, num):
             if grid[row][col]:
                 grid[row][col] = 0
                 blanks += 1
-
-# def fillGrid(grid = []): 
-#     if not grid:
-#         grid = [[0,0,0,0,0,0,0,0,0],
-#                 [0,0,0,0,0,0,0,0,0],
-#                 [0,0,0,0,0,0,0,0,0],
-#                 [0,0,0,0,0,0,0,0,0],
-#                 [0,0,0,0,0,0,0,0,0],
-#                 [0,0,0,0,0,0,0,0,0],
-#                 [0,0,0,0,0,0,0,0,0],
-#                 [0,0,0,0,0,0,0,0,0],
-#                 [0,0,0,0,0,0,0,0,0]]
-
-#     for row in range(9):
-#         numbers = [x for x in range(1, 10)]
-#         for col in range(9):
-#             prevGrid = [row[:] for row in grid]
-#             numLength = len(numbers)
-#             attempted = []
-
-#             while True:
-#                 if len(attempted) == numLength:
-#                     break
-#                 num = random.choice([x for x in numbers if x not in attempted])
-#                 grid[row][col] = num
-                
-#                 print(f'Currenlty trying {num} from {numbers}. This is attempt number {len(attempted) + 1}')
-#                 print(f'Checking {num} for cell {row}-{col}')
-#                 if checkNum(grid, row, col):
-#                     print(f'{num} at ({row}-{col}) is valid', end = sep)
-#                     numbers.pop(numbers.index(num))
-#                     printGrid(grid)
-#                     break
-#                 else:
-#                     attempted.append(num)
-#                     print(f'{num} at ({row}-{col}) is not valid')
-#                     printGrid(grid)
-
-#                 if len(attempted) == numLength:
-#                     print('TRIED ALL NUMBERS. RETURNING TO PREVIOUS STATE AND TRYING AGAIN')
-#                     grid = fillGrid(prevGrid)
-#     return grid    
 
 if __name__ == '__main__':
 
