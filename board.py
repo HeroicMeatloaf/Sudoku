@@ -9,7 +9,7 @@ sep = '\n' +  ('-' * 20) + '\n'
 def printGrid(grid):
     for row in grid:
         print(row)
-    print(sep)
+   
 
 def fillGrid(grid = []): 
     if not grid:
