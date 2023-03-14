@@ -10,7 +10,6 @@ def printGrid(grid):
     for row in grid:
         print(row)
    
-
 def fillGrid(grid = []): 
     if not grid:
         grid = [[0,0,0,0,0,0,0,0,0],
