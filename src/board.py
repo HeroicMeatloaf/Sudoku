@@ -23,6 +23,8 @@ def fillGrid(grid = []):
                 [0,0,0,0,0,0,0,0,0],
                 [0,0,0,0,0,0,0,0,0],
                 [0,0,0,0,0,0,0,0,0]]
+    else:
+        grid = [row[:] for row in grid]
 
         print(sep)
         printGrid(grid)
@@ -101,65 +103,45 @@ def removeCells(grid, num):
     grid = [row[:] for row in grid]
 
     blanks = 0
-    print(f'Beginning with {blanks} blanks. Entering while loop.')
-
-    while True:
-        print(f'Current blanks: {blanks}')
-
-        # Check to see if we have desired blanks
-        if blanks == num:
-            print(f'blanks{blanks} = num{num}. Breaking out of while loop. Falling off end of function')
-            break
+    
+    positions = list(range(0, 81))
+    
+    while blanks < num:
         
-        # Pick random cell from grid
-        row = random.choice(range(0,9))
-        col = random.choice(range(0,9))
-
-        print(f'Chosen cell: {row},{col}.')
-        print(f'Current number in cell: {grid[row][col]}')
-
-        if grid[row][col]:
-            print('Current number is non zero. Making it zero and adding one to blanks')
-            grid[row][col] = 0
-            blanks += 1
-
-        print(sep)
-        printGrid(grid)
-        print(sep)
+        position = random.choice(positions)
+        
+        grid[position // 9][position % 9] = 0
+        positions.remove(position)
+        blanks += 1
 
     return grid
 
+def countZeros(grid):
+
+    zeros = 0
+
+    for rowindex, row in enumerate(grid):
+        for colindex, col in enumerate(row):
+            if grid[rowindex][colindex] == 0:
+                zeros += 1
+    return zeros
 
 if __name__ == '__main__':
     file = open('output.txt', 'w')
     sys.stdout = file
 
     # Generate board
-    print('BEGIN GENERATING PUZZLE')
-    grid = fillGrid()
-    print(sep)
+    print('GENERATE FULL BOARD')
+    filledBoard = fillGrid()
 
-    # Remove cells
-    print('BEGIN REMOVING CELLS')
-    puzzle = removeCells(grid, 30)
-    print(sep)
+    # Generate puzzle
+    print('GENERATE PUZZLE')
+    puzzle = removeCells(filledBoard, 30)
 
-    # Solve board
-    print('BEGIN SOLVING')
+    # Solve Puzzle
+    print('SOLVE PUZZLE')
     solvedPuzzle = fillGrid(puzzle)
 
-    print(sep)
-    print('FILLED PUZZLE')
-    print(sep)
-    printGrid(grid)
-    print(sep)
+    
 
-    print('INITIAL PUZZLE')
-    print(sep)
-    printGrid(puzzle)
-    print(sep)
 
-    print('SOLVED PUZZLE')
-    print(sep)
-    printGrid(solvedPuzzle)
-    print(sep)
