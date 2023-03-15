@@ -1,58 +1,70 @@
 #Methods for checking numbers
+import board
 
-def checkRow(grid, row, col):
-    if grid[row][col] in grid[row][:col] + grid[row][col + 1:]:
-        # print('checkRow - FAILED')
-        return False
-    else:
-        # print('checkRow - PASSED')
-        return True
+sep = '\n' +  ('-' * 20) + '\n'
 
-def checkCol(grid, row, col):
-    column = [rows[col] for rows in grid][:row] + [rows[col] for rows in grid][row + 1:]
-    if grid[row][col] in column:
-        # print('checkCol - FAILED')
-        return False
-    else:
-        # print('checkCol - PASSED')
-        return True
+def invalid(board, row, col):
+    invalidNumbers = {}
+    rowNums = set(board[row][:col] + board[row][col + 1:])
+    colNums = set([rows[col] for rows in board][:row] + [rows[col] for rows in board][row + 1:])
 
-def checkBox(grid, row, col):
 
-    box = []
+    boxNums = []
     y = row // 3
     x = col // 3
 
     if y == 0:
-        box.extend((grid[0], grid[1], grid[2]))
+        boxNums.extend((board[0], board[1], board[2]))
 
     elif y == 1:
-        box.extend((grid[3], grid[4], grid[5]))
+        boxNums.extend((board[3], board[4], board[5]))
 
     else:
-        box.extend((grid[6], grid[7], grid[8]))
+        boxNums.extend((board[6], board[7], board[8]))
 
     if x == 0:
-        box = [row[:3] for row in box]
+        boxNums = [row[:3] for row in boxNums]
 
     elif x == 1:
-        box = [row[3:6] for row in box]
+        boxNums = [row[3:6] for row in boxNums]
 
     else:
-        box = [row[6:] for row in box]
+        boxNums = [row[6:] for row in boxNums]
 
-    box = [item for row in box for item in row]
+    boxNums = set([item for row in boxNums for item in row])
 
-    if box.count(grid[row][col]) > 1:
+    invalidNumbers = rowNums | colNums | boxNums
+    return list(invalidNumbers)
+
+
+# Runs invalid to get the list of invalid numbers and then checks to see if number at board[row][col] is in that list
+def checkNum(board, row, col):
+
+    invalidNumbers = invalid(board, row, col)
+    invalidNumbers.remove(board[row][col])
+
+    if board[row][col] in invalidNumbers:
+        # print('checkNum - Failed')
         return False
     else:
+        # print('checkNum - Passed')
         return True
 
-# Runs checkRow(), checkCol(), checkBox() to determine if number is valid. Returns True/False
-def checkNum(grid, row, col):
-    if checkRow(grid, row, col) and checkCol(grid, row, col) and checkBox(grid, row, col):
-        # print('checkNum - PASSED')
-        return True
-    else:
-        # print('checkNum - FAILED')
-        return False
+if __name__ == '__main__':
+
+    puzzle = [[7, 2, 8, 9, 4, 3, 5, 6, 1],
+              [4, 1, 5, 6, 7, 0, 8, 2, 9],
+              [9, 0, 0, 2, 8, 5, 3, 7, 4],
+              [8, 4, 7, 3, 9, 2, 6, 1, 0],
+              [1, 0, 2, 8, 0, 0, 0, 0, 0],
+              [0, 0, 6, 7, 0, 1, 0, 0, 2],
+              [5, 0, 3, 4, 2, 6, 7, 9, 8],
+              [2, 0, 0, 5, 3, 0, 0, 4, 6],
+              [6, 8, 4, 1, 0, 0, 2, 5, 0]]
+
+    
+    puzzle[2][1] = 6
+
+    board.printGrid(puzzle)
+    print(sep)
+    print(checkNum(puzzle, 2, 1))
