@@ -3,7 +3,7 @@ import board
 
 sep = '\n' +  ('-' * 20) + '\n'
 
-def invalid(board, row, col):
+def valid(board, row, col):
     invalidNumbers = {}
     rowNums = set(board[row][:col] + board[row][col + 1:])
     colNums = set([rows[col] for rows in board][:row] + [rows[col] for rows in board][row + 1:])
@@ -34,20 +34,20 @@ def invalid(board, row, col):
     boxNums = set([item for row in boxNums for item in row])
 
     invalidNumbers = rowNums | colNums | boxNums
-    return list(invalidNumbers)
+
+    validNumbers = [num for num in range(1,10) if num not in invalidNumbers]
+
+    return validNumbers
 
 
 # Runs invalid to get the list of invalid numbers and then checks to see if number at board[row][col] is in that list
 def checkNum(board, row, col):
 
     invalidNumbers = invalid(board, row, col)
-    invalidNumbers.remove(board[row][col])
 
     if board[row][col] in invalidNumbers:
-        # print('checkNum - Failed')
         return False
     else:
-        # print('checkNum - Passed')
         return True
 
 if __name__ == '__main__':
@@ -63,8 +63,6 @@ if __name__ == '__main__':
               [6, 8, 4, 1, 0, 0, 2, 5, 0]]
 
     
-    puzzle[2][1] = 6
+    
 
-    board.printGrid(puzzle)
-    print(sep)
-    print(checkNum(puzzle, 2, 1))
+    print(valid(puzzle, 2, 1))

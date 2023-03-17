@@ -6,6 +6,8 @@ import checker
 
 sep = '\n' +  ('-' * 20) + '\n'
 
+global prevBoard
+
 def printboard(board):
     for row in board:
         print(row)
@@ -26,9 +28,9 @@ def fillboard(board = []):
     else:
         board = [row[:] for row in board]
 
-        print(sep)
-        printboard(board)
-        print(sep)
+    print(sep)
+    printboard(board)
+    print(sep)
 
     for rowindex, row in enumerate(board):
         # For every (0, [0,0,0,0,0,0,0,0,0])
@@ -36,67 +38,55 @@ def fillboard(board = []):
         print(f'Starting row {rowindex + 1}')
 
         if 0 not in row:
-            print(f'This row is already filled in. Moving on to row number {rowindex + 1}')
+            print(f'This row is already filled in. Moving on to row number {rowindex + 2}')
+            print(sep)
             # This row has already been filled in. Move on to next row
             continue
 
-        # Take a copy of current board before any changes are made.
-        prevboard = [row[:] for row in board]
-
         for colindex, col in enumerate(row):
+            
+            prevBoard = [row[:] for row in board]
             # For every column in row
             print(f'Starting column {colindex}. Current number: {col}')
+            print(sep)
+
 
             if board[rowindex][colindex]:
                 # Non zero number. Move on to next column
                 print(f'Filled in. Moving on to next column {colindex + 1}')
+                print(sep)
                 continue
             
-            # Initialize attempted to be an empty list
-            attempted = []
 
-            while True:
-                # Recalculate numbers based on what's in row
-                numbers = [x for x in range(1,10) if x not in checker.invalid(board, rowindex, colindex) and x not in attempted]
-                print(f'Current numbers to pick from: {numbers}')
+            # Recalculate numbers based on what's in row
+            numbers = checker.valid(board, rowindex, colindex)
+            random.shuffle(numbers)
 
-                if len(numbers) == 0:
-                    # Ran out of numbers to pick from. Back track to previous board
-                    print(f'Ran out of valid options. Reverting back to previous board')
-                    printboard(prevboard)
-                    print(sep)
-                    board = fillboard(prevboard)
-                    return board
 
-                # Pick number at random from list of available numbers
-                # Assign that number to current location in board
-                num = random.choice(numbers)
-                board[rowindex][colindex] = num
-
-                print(f'Trying number {num} at {rowindex},{colindex}')
+        
+            # print(f'Current numbers to pick from: {numbers}')
+            
+            while numbers:
+                number = random.choice(numbers)
+                board[rowindex][colindex] = number
+                numbers.remove(number)
+                board = fillboard(board)
                 
-                # Check to see if number passes
-                if checker.checkNum(board, rowindex, colindex):
-                    # Passes - pop number from numbers and break out of while loop.
-                    # Should move on to next position in row
-                    print(f'{num} passes checks. Moving on to next position')
-                    print(sep)
-                    printboard(board)
-                    print(sep)
-                    break
-                else:
-                    # Fails - pop number from numbers and stay in while loop.
-                    # Should stay on current position in row
-                    print(f'{num} fails checks. Picking a new number')
-                    print(sep)
-                    board[rowindex][colindex] = 0
-                    attempted.append(num)
 
-        # Row complete
-        print(f'Row {rowindex + 1} is complete.', 'FINISHED SOLVING' if rowindex == 8 else f'Moving on to row {rowindex + 2}')  
-        print(sep)
+                board[rowindex][colindex] = 0
+            return board
+            
+            
 
-    return board
+            print(sep)
+            printboard(board)
+            print(sep)
+                
+    
+                           
+    
+
+# prevBoard = [row[:] for row in board]  
 
 def removeCells(board, num):
     #Take copy of board
