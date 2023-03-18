@@ -1,5 +1,4 @@
 #Methods for checking numbers
-import board
 
 sep = '\n' +  ('-' * 20) + '\n'
 

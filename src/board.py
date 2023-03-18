@@ -1,8 +1,11 @@
 # Generates a random board
 
+# Standard library imports
 import random
 import sys
-import checker
+
+# Local application imports
+import Sudoku.src.checker as checker
 
 sep = '\n' +  ('-' * 20) + '\n'
 
@@ -15,7 +18,7 @@ def printboard(board):
 def fillboard(board = []): 
     if not board:
         # If board is empty initialize it
-        print(f'board does not exist. Must initialize.')
+        # print(f'board does not exist. Must initialize.')
         board = [[0,0,0,0,0,0,0,0,0],
                 [0,0,0,0,0,0,0,0,0],
                 [0,0,0,0,0,0,0,0,0],
@@ -28,9 +31,9 @@ def fillboard(board = []):
     else:
         board = [row[:] for row in board]
 
-    print(sep)
-    printboard(board)
-    print(sep)
+    # print(sep)
+    # printboard(board)
+    # print(sep)
 
     for position in range(0, 81):
 
@@ -46,8 +49,8 @@ def fillboard(board = []):
         numbers = checker.valid(board, row, col)
         random.shuffle(numbers)
    
-        print(f'Current numbers to pick from: {numbers}')
-        print(sep)
+        # print(f'Current numbers to pick from: {numbers}')
+        # print(sep)
 
         for num in numbers:
             board[row][col] = num
@@ -105,7 +108,7 @@ if __name__ == '__main__':
     sys.stdout = file
 
     filledBoard = fillboard()
-    puzzle = removeCells(filledBoard, 30)
+    puzzle = removeCells(filledBoard, 70)
     solvedPuzzle = fillboard(puzzle)
     
 
