@@ -32,60 +32,37 @@ def fillboard(board = []):
     printboard(board)
     print(sep)
 
-    for rowindex, row in enumerate(board):
-        # For every (0, [0,0,0,0,0,0,0,0,0])
+    for position in range(0, 81):
 
-        print(f'Starting row {rowindex + 1}')
-
-        if 0 not in row:
-            print(f'This row is already filled in. Moving on to row number {rowindex + 2}')
-            print(sep)
-            # This row has already been filled in. Move on to next row
+        row = position // 9
+        col = position % 9
+   
+        if board[row][col]:
+            # Non zero number. Move on to next column
             continue
+        
 
-        for colindex, col in enumerate(row):
-            
-            prevBoard = [row[:] for row in board]
-            # For every column in row
-            print(f'Starting column {colindex}. Current number: {col}')
-            print(sep)
+        # Recalculate numbers based on what's in row
+        numbers = checker.valid(board, row, col)
+        random.shuffle(numbers)
+   
+        print(f'Current numbers to pick from: {numbers}')
+        print(sep)
 
+        for num in numbers:
+            board[row][col] = num
+            board = fillboard(board)
 
-            if board[rowindex][colindex]:
-                # Non zero number. Move on to next column
-                print(f'Filled in. Moving on to next column {colindex + 1}')
-                print(sep)
-                continue
-            
+            if complete(board):
+                return board
+            else:
+                board[row][col] = 0
 
-            # Recalculate numbers based on what's in row
-            numbers = checker.valid(board, rowindex, colindex)
-            random.shuffle(numbers)
-
+        return board
 
         
-            # print(f'Current numbers to pick from: {numbers}')
-            
-            while numbers:
-                number = random.choice(numbers)
-                board[rowindex][colindex] = number
-                numbers.remove(number)
-                board = fillboard(board)
+    return board
                 
-
-                board[rowindex][colindex] = 0
-            return board
-            
-            
-
-            print(sep)
-            printboard(board)
-            print(sep)
-                
-    
-                           
-    
-
 # prevBoard = [row[:] for row in board]  
 
 def removeCells(board, num):
@@ -116,31 +93,41 @@ def countZeros(board):
                 zeros += 1
     return zeros
 
+def complete(board):
+    for row in board:
+        if 0 in row:
+            return False
+
+    return True
+
 if __name__ == '__main__':
     file = open('output.txt', 'w')
     sys.stdout = file
 
-    # Generate board
-    print('GENERATE FULL BOARD')
     filledBoard = fillboard()
-
-    # Generate puzzle
-    print('GENERATE PUZZLE')
     puzzle = removeCells(filledBoard, 30)
-    print(countZeros(puzzle))
-
-    # Solve Puzzle
-    print('SOLVE PUZZLE')
     solvedPuzzle = fillboard(puzzle)
+    
 
+    # Generate board
+    print('GENERATE FULL BOARD')  
     print(sep)
     printboard(filledBoard)
     print(sep)
 
+    # Generate puzzle
+    print('PUZZLE')   
+    print(sep)
     printboard(puzzle)
     print(sep)
+    print(countZeros(puzzle))
 
+    # Solve puzzle
+    print('SOLVED PUZZLE')
+    print(sep)
     printboard(solvedPuzzle)
+    print(sep)
+
 
 
 
