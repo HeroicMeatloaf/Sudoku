@@ -5,7 +5,7 @@ import random
 import sys
 
 # Local application imports
-import Sudoku.src.checker as checker
+import checker
 
 sep = '\n' +  ('-' * 20) + '\n'
 
@@ -62,7 +62,6 @@ def fillboard(board = []):
                 board[row][col] = 0
 
         return board
-
         
     return board
                 
