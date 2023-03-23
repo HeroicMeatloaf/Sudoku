@@ -12,60 +12,76 @@ root.geometry("324x550")
 label = Label(root, text = "Fill in numbers")
 label.grid(row = 0, column = 1, columnspan = 10, sticky = "ew")
 
-# errLabel = Label(root, text = "", fg = "red")
-# errLabel.grid(row = 15, column = 1, columnspan = 10, pady = 5)
+genBoardBtn = Button(root, text = "Generate Board", command = lambda: generateBaord())
+genBoardBtn.grid(row = 10, columnspan = 10, sticky = "ew")
 
-# solvedLabel = Label(root, text = "", fg = "green")
-# solvedLabel.grid(row = 15, column = 1, columnspan = 10, pady = 5)
+checkBoardBtn = Button(root, text = "Check Board", command = lambda: checkBoard())
+checkBoardBtn.grid(row = 11, columnspan = 10, sticky = "ew")
 
+# Initialize cells of board.
 cells = {}
 
-def drawCell(row, col, bgcolor):
-
-	cell = Entry(root, width = 5, bg = bgcolor, justify = "center")
-	cell.grid(row = row + 1, column = col + 1, sticky = "nsew", padx = 1, pady = 1, ipady = 5)
-	cell.bind('<Return>', lambda x: updateNumber(cell.get(), row, col)) 
-	cell.configure({"readonlybackground": bgcolor})
-	cells[(row, col)] = cell
-
-def draw9x9():
-	for cell in range(0, 81):
-
-		row = cell // 9
-		col = cell % 9
-
-		if ((row // 3) % 2 == 0 and (col // 3) % 2 == 0) or ((row // 3) % 2 == 1 and (col // 3) % 2 == 1):
-			color =  "#D0ffff"
-		else:
-			color = "#ffffd0"
-
-		drawCell(row, col, color)
+# Colors
+blue = "#D0ffff"
+yellow = "#ffffd0"
+red = "#ffcccb"
+default = "#F0F0F0"
 
 def updateNumber(num, row, col):
 
-	if num.isdigit() and int(num) in range(1,10):
-		label.configure(text = 'Fill in numbers', bg="#F0F0F0")
-		puzzle[row][col] = int(num)
+	print('In updateNumber')
+	print(f'Num is {num}, Row is {row}, Col is {col}')
+
+	# if num.isdigit() and int(num) in range(1,10):
+	# 	label.configure(text = 'Fill in numbers', bg = default)
+	# 	puzzle[row][col] = int(num)
+	# else:
+	# 	label.configure(text = 'INVALID NUMBER', bg = red)
+	# 	cells[(row, col)].delete(0, END)
+
+def generateBaord():
+
+	clearBoard()
+
+	board = bd.fillboard()
+	puzzle = bd.removeCells(board, 30)
+
+	for rowindex, row in enumerate(puzzle):
+		for colindex, col in enumerate(row):
+			if col == 0:
+				cells[(rowindex, colindex)].insert(0, "")
+			else:
+				cells[(rowindex, colindex)].insert(0, str(col))
+				cells[(rowindex, colindex)].configure(state="readonly")
+
+def clearBoard():
+	
+	for cell in cells:
+		cells[cell].configure(state = "normal")
+		cells[cell].delete(0, END)
+
+def checkBoard():
+	for rowindex, row in enumerate(puzzle):
+		for colindex, col in enumerate(row):
+			if chk.checkNum(puzzle, rowindex, colindex):
+				cells[rowindex, colindex].configure(bg = "green")
+			else:
+				cells[rowindex, colindex].configure(bg = red)
+
+# Draw board
+for num in range(0, 81):
+
+	row = num // 9
+	col = num % 9
+
+	if ((row // 3) % 2 == 0 and (col // 3) % 2 == 0) or ((row // 3) % 2 == 1 and (col // 3) % 2 == 1):
+		color =  blue
 	else:
-		label.configure(text = 'INVALID NUMBER', bg="#ffcccb")
-		cells[(row, col)].delete(0, END)
+		color = yellow
 
-# Blue: color =  "#D0ffff"
-# Yellow: color = "#ffffd0"
-
-board = bd.fillboard()
-puzzle = bd.removeCells(board, 30)
-
-
-
-draw9x9()
-
-for rowindex, row in enumerate(puzzle):
-	for colindex, col in enumerate(row):
-		if col == 0:
-			cells[(rowindex, colindex)].insert(0, "")
-		else:
-			cells[(rowindex, colindex)].insert(0, str(col))
-			cells[(rowindex, colindex)].configure(state="readonly")
+	cell = Entry(root, width = 5, bg = color, justify = "center", readonlybackground = color)
+	cell.grid(row = row + 1, column = col + 1, sticky = "nsew", padx = 1, pady = 1, ipady = 5)
+	cell.bind('<Return>', lambda x: updateNumber(cell.get(), row, col)) 
+	cells[(row, col)] = cell
 
 root.mainloop()

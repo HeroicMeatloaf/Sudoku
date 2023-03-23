@@ -129,11 +129,3 @@ if __name__ == '__main__':
     print(sep)
     printboard(solvedPuzzle)
     print(sep)
-
-
-
-
-
-    
-
-

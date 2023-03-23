@@ -42,12 +42,12 @@ def valid(board, row, col):
 # Runs invalid to get the list of invalid numbers and then checks to see if number at board[row][col] is in that list
 def checkNum(board, row, col):
 
-    invalidNumbers = invalid(board, row, col)
+    validNumbers = valid(board, row, col)
 
-    if board[row][col] in invalidNumbers:
-        return False
-    else:
+    if board[row][col] in validNumbers:
         return True
+    else:
+        return False
 
 if __name__ == '__main__':
 
