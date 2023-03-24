@@ -20,34 +20,39 @@ checkBoardBtn.grid(row = 11, columnspan = 10, sticky = "ew")
 
 # Initialize cells of board.
 cells = {}
+puzzle = []
 
 # Colors
 blue = "#D0ffff"
 yellow = "#ffffd0"
 red = "#ffcccb"
+green = "#98fb98"
 default = "#F0F0F0"
+
 
 def updateNumber(num, row, col):
 
-	print('In updateNumber')
-	print(f'Num is {num}, Row is {row}, Col is {col}')
+	if num.isdigit() and int(num) in range(1,10):
+		label.configure(text = 'Fill in numbers', bg = default)
+		puzzle[row][col] = int(num)
+	else:
+		label.configure(text = 'INVALID NUMBER', bg = red)
+		cells[(row, col)].delete(0, END)
 
-	# if num.isdigit() and int(num) in range(1,10):
-	# 	label.configure(text = 'Fill in numbers', bg = default)
-	# 	puzzle[row][col] = int(num)
-	# else:
-	# 	label.configure(text = 'INVALID NUMBER', bg = red)
-	# 	cells[(row, col)].delete(0, END)
+	bd.printboard(puzzle)
+	print('\n')
 
 def generateBaord():
+	global puzzle
 
 	clearBoard()
 
 	board = bd.fillboard()
-	puzzle = bd.removeCells(board, 30)
+	puzzle = bd.removeCells(board, 20)
 
 	for rowindex, row in enumerate(puzzle):
 		for colindex, col in enumerate(row):
+			cells[(rowindex, colindex)].configure(bg = cells[(rowindex, colindex)].color)
 			if col == 0:
 				cells[(rowindex, colindex)].insert(0, "")
 			else:
@@ -61,12 +66,27 @@ def clearBoard():
 		cells[cell].delete(0, END)
 
 def checkBoard():
+	solved = True
 	for rowindex, row in enumerate(puzzle):
 		for colindex, col in enumerate(row):
-			if chk.checkNum(puzzle, rowindex, colindex):
-				cells[rowindex, colindex].configure(bg = "green")
+			if not chk.checkNum(puzzle, rowindex, colindex):
+				cells[(rowindex, colindex)].configure(bg = red)
+				solved = False
 			else:
-				cells[rowindex, colindex].configure(bg = red)
+				cells[(rowindex, colindex)].configure(bg = cells[(rowindex, colindex)].color)
+
+	if not solved:
+		label.configure(text = 'NOT CORRECT', bg = red)
+	else:
+		label.configure(text = 'SOLVED', bg = green)
+
+
+def drawCell(row, col, color):
+	cell = Entry(root, width = 5, bg = color, justify = "center", readonlybackground = color)
+	cell.grid(row = row + 1, column = col + 1, sticky = "nsew", padx = 1, pady = 1, ipady = 5)
+	cell.bind('<Return>', lambda x: updateNumber(cell.get(), row, col)) 
+	cell.color = color
+	cells[(row, col)] = cell
 
 # Draw board
 for num in range(0, 81):
@@ -79,9 +99,6 @@ for num in range(0, 81):
 	else:
 		color = yellow
 
-	cell = Entry(root, width = 5, bg = color, justify = "center", readonlybackground = color)
-	cell.grid(row = row + 1, column = col + 1, sticky = "nsew", padx = 1, pady = 1, ipady = 5)
-	cell.bind('<Return>', lambda x: updateNumber(cell.get(), row, col)) 
-	cells[(row, col)] = cell
+	drawCell(row, col, color)
 
 root.mainloop()

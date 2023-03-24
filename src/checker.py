@@ -30,7 +30,9 @@ def valid(board, row, col):
     else:
         boxNums = [row[6:] for row in boxNums]
 
-    boxNums = set([item for row in boxNums for item in row])
+    boxNums = [item for row in boxNums for item in row]
+    boxNums.remove(board[row][col])
+    boxNums = set(boxNums)
 
     invalidNumbers = rowNums | colNums | boxNums
 
@@ -65,3 +67,12 @@ if __name__ == '__main__':
     
 
     print(valid(puzzle, 2, 1))
+    print(checkNum(puzzle, 2, 1))
+
+    puzzle[2][1] = 6
+    print(valid(puzzle, 2, 1))
+    print(checkNum(puzzle, 2, 1))
+
+    puzzle[2][2] = 6
+    print(valid(puzzle, 2, 1))
+    print(checkNum(puzzle, 2, 1))
