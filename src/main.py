@@ -1,3 +1,20 @@
+"""
+This is the main module of the Sudoku project. This module imports checker.py
+and board.py to generate a puzzle and puts the puzzle in a tkinter GUI.
+
+
+updateNumber(num, row, col) - Updates number in puzzle returned from bd.fillboard().
+Called when a number is entered into board
+
+generateBaord() - Calls board.fillboard() and board.removeCells() to create a puzzle
+and then displays the puzzle on the board
+
+clearBoard() - Clears board
+checkBoard() - Checks board
+drawCell(row, col, color) - Draws individual cells
+
+"""
+
 # Standard library imports
 from tkinter import *
 
@@ -29,8 +46,26 @@ red = "#ffcccb"
 green = "#98fb98"
 default = "#F0F0F0"
 
-
 def updateNumber(num, row, col):
+	"""
+	Updates number in puzzle when a number gets inserted into GUI
+
+    Parameters
+    ----------
+	num: int
+		The number that gets inserted into cell
+
+	row: int
+		The row of cell to that was updated
+
+	col: int
+		The column of cell that was updated
+    
+    Returns
+    -------
+    None
+
+    """
 
 	if num.isdigit() and int(num) in range(1,10):
 		label.configure(text = 'Fill in numbers', bg = default)
@@ -43,6 +78,19 @@ def updateNumber(num, row, col):
 	print('\n')
 
 def generateBaord():
+	"""
+	Generates board and displays board in GUI
+
+    Parameters
+    ----------
+	none
+    
+    Returns
+    -------
+    None
+
+    """
+
 	global puzzle
 
 	clearBoard()
@@ -60,12 +108,37 @@ def generateBaord():
 				cells[(rowindex, colindex)].configure(state="readonly")
 
 def clearBoard():
+	"""
+	Clear board in GUI
+
+    Parameters
+    ----------
+	none
+    
+    Returns
+    -------
+    None
+
+    """
 	
 	for cell in cells:
 		cells[cell].configure(state = "normal")
 		cells[cell].delete(0, END)
 
 def checkBoard():
+	"""
+	Checks board stored in puzzle
+
+    Parameters
+    ----------
+	none
+    
+    Returns
+    -------
+    None
+
+    """
+
 	solved = True
 	for rowindex, row in enumerate(puzzle):
 		for colindex, col in enumerate(row):
@@ -82,6 +155,27 @@ def checkBoard():
 
 
 def drawCell(row, col, color):
+	"""
+	Draws individual cells of board.
+
+    Parameters
+    ----------
+
+	row: int
+		The row of cell to that was updated
+
+	col: int
+		The column of cell that was updated
+
+	color: str
+		Hex value of color of cell
+    
+    Returns
+    -------
+    None
+
+    """
+
 	cell = Entry(root, width = 5, bg = color, justify = "center", readonlybackground = color)
 	cell.grid(row = row + 1, column = col + 1, sticky = "nsew", padx = 1, pady = 1, ipady = 5)
 	cell.bind('<Return>', lambda x: updateNumber(cell.get(), row, col)) 

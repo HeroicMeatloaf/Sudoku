@@ -1,4 +1,15 @@
-# Generates a random board
+"""
+Purpose of this module is to export functions used in generating and
+solving sudoku boards.
+
+Functions exported:
+
+printboard(board) - Prints board
+fillboard(board = []) - Fills/solves board depending on usage
+removeCells(board, num) - Removes specified number of cells from board
+complete(board) - Checks if board is filled out
+
+"""
 
 # Standard library imports
 import random
@@ -7,36 +18,59 @@ import sys
 # Local application imports
 import checker
 
-sep = '\n' +  ('-' * 20) + '\n'
-
-global prevBoard
-
 def printboard(board):
+    """
+    Prints board in a readable manner by putting each row in a separate
+    line.
+
+    Parameters
+    ----------
+    board: list
+        The board to be printed. Should be a 2-D list
+    
+    Returns
+    -------
+    None
+
+    """
+
     for row in board:
         print(row)
    
 def fillboard(board = []): 
+    """
+    Generates a full board or solves puzzle depending on usage.
+
+    Parameters
+    ----------
+    board: list, optional
+        The board to be solved if used. If omitted, one will be 
+        initialized and used to generate a new puzzle.
+
+    Returns:
+    board: list
+        Filled with non zero values.
+
+    """
     if not board:
         # If board is empty initialize it
-        # print(f'board does not exist. Must initialize.')
         board = [[0,0,0,0,0,0,0,0,0],
-                [0,0,0,0,0,0,0,0,0],
-                [0,0,0,0,0,0,0,0,0],
-                [0,0,0,0,0,0,0,0,0],
-                [0,0,0,0,0,0,0,0,0],
-                [0,0,0,0,0,0,0,0,0],
-                [0,0,0,0,0,0,0,0,0],
-                [0,0,0,0,0,0,0,0,0],
-                [0,0,0,0,0,0,0,0,0]]
+                 [0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0]]
     else:
+        # Take copy
         board = [row[:] for row in board]
 
-    # print(sep)
-    # printboard(board)
-    # print(sep)
-
+    # Loop through each of the 81 positions
     for position in range(0, 81):
 
+        # Get row and col
         row = position // 9
         col = position % 9
    
@@ -44,13 +78,9 @@ def fillboard(board = []):
             # Non zero number. Move on to next column
             continue
         
-
-        # Recalculate numbers based on what's in row
+        # Recalculate numbers based on valid numbers
         numbers = checker.valid(board, row, col)
         random.shuffle(numbers)
-   
-        # print(f'Current numbers to pick from: {numbers}')
-        # print(sep)
 
         for num in numbers:
             board[row][col] = num
@@ -64,10 +94,25 @@ def fillboard(board = []):
         return board
         
     return board
-                
-# prevBoard = [row[:] for row in board]  
-
+            
 def removeCells(board, num):
+    """
+    Removes specified number of cells from board
+
+    Parameters
+    ----------
+    board: list
+        The board from which cells will be removed
+
+    num: int
+        The number of cells to be removed
+
+    Returns:
+    board: list
+        With the specified number of cells removed and replaced by 0
+        
+    """
+
     #Take copy of board
     board = [row[:] for row in board]
 
@@ -85,17 +130,21 @@ def removeCells(board, num):
 
     return board
 
-def countZeros(board):
-
-    zeros = 0
-
-    for rowindex, row in enumerate(board):
-        for colindex, col in enumerate(row):
-            if board[rowindex][colindex] == 0:
-                zeros += 1
-    return zeros
-
 def complete(board):
+    """
+    Checks if the board is filled in with nonzero numbers.
+    Doesnt neccessarily check for correctness.
+
+    Parameters
+    ----------
+    board: list
+        The board to be checked
+
+    Returns:
+    bool
+        The boolean value indicating if the board is/isnt complete
+        
+    """
     for row in board:
         if 0 in row:
             return False

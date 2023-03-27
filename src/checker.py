@@ -1,8 +1,35 @@
-#Methods for checking numbers
+"""
+Purpose of this module is to export functions used in checking cells of
+Sudoku board
 
-sep = '\n' +  ('-' * 20) + '\n'
+Functions exported:
+
+valid(board, row, col) - Returns list of valid numbers for given cell
+checkNum(board, row, col) - Checks validity of number at given cell
+"""
 
 def valid(board, row, col):
+    """
+    Returns a list of valid numbers given a position on board
+
+    Parameters
+    ----------
+    board: list
+        The board to be checked
+
+    row: int
+        The row number
+
+    col: int
+        The column number
+    
+    Returns
+    -------
+    validNumbers: list
+        A list of validNumbers at the requested position
+
+    """
+
     invalidNumbers = {}
     rowNums = set(board[row][:col] + board[row][col + 1:])
     colNums = set([rows[col] for rows in board][:row] + [rows[col] for rows in board][row + 1:])
@@ -40,9 +67,30 @@ def valid(board, row, col):
 
     return validNumbers
 
-
 # Runs invalid to get the list of invalid numbers and then checks to see if number at board[row][col] is in that list
 def checkNum(board, row, col):
+    """
+    Checks a number at a given postion and returns a boolean indicating whether or
+    not the number is valid. Uses valid to first get list of valic number and then
+    checks to see if the number at the given position in valid
+
+    Parameters
+    ----------
+    board: list
+        The board to be checked
+
+    row: int
+        The row number
+
+    col: int
+        The column number
+    
+    Returns
+    -------
+    boolean
+        True if valid, False if not valid
+
+    """
 
     validNumbers = valid(board, row, col)
 
