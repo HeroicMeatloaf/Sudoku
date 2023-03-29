@@ -1,4 +1,4 @@
-#Sudoku
+# Sudoku
 ***
 
 This is a basic Sudoku game. This was done as my first project
